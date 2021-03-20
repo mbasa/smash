@@ -6,10 +6,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:smash/eu/hydrologis/smash/import/gss_import.dart';
 import 'package:smashlibs/smashlibs.dart';
-
-import 'gtt_import.dart';
+import 'package:smash/eu/hydrologis/smash/import/gss_import.dart';
+import 'package:smash/eu/hydrologis/smash/import/gtt_import.dart';
 
 class ImportWidget extends StatefulWidget {
   ImportWidget({Key key}) : super(key: key);

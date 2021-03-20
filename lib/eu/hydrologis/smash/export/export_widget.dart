@@ -13,6 +13,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:smash/eu/hydrologis/smash/export/geopackage_export.dart';
 import 'package:smash/eu/hydrologis/smash/export/gpx_kml_export.dart';
+import 'package:smashlibs/smashlibs.dart';
 import 'package:smash/eu/hydrologis/smash/export/gss_export.dart';
 import 'package:smash/eu/hydrologis/smash/export/gtt_export.dart';
 /*
@@ -22,7 +23,6 @@ import 'package:smash/eu/hydrologis/smash/export/gtt_export.dart';
  */
 import 'package:smash/eu/hydrologis/smash/export/pdf_export.dart';
 import 'package:smash/eu/hydrologis/smash/models/project_state.dart';
-import 'package:smashlibs/smashlibs.dart';
 
 class ExportWidget extends StatefulWidget {
   ExportWidget({Key key}) : super(key: key);
