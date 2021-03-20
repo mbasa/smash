@@ -15,6 +15,7 @@ import 'package:smash/eu/hydrologis/smash/export/geopackage_export.dart';
 import 'package:smash/eu/hydrologis/smash/export/gpx_kml_export.dart';
 import 'package:smashlibs/smashlibs.dart';
 import 'package:smash/eu/hydrologis/smash/export/gss_export.dart';
+import 'package:smash/eu/hydrologis/smash/export/gtt_export.dart';
 /*
  * Copyright (c) 2019-2020. Antonello Andrea (www.hydrologis.com). All rights reserved.
  * Use of this source code is governed by a GPL3 license that can be
@@ -217,6 +218,24 @@ class _ExportWidgetState extends State<ExportWidget> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => new GssExportWidget(db)));
+            }),
+        ListTile(
+            leading: Icon(
+              MdiIcons.cloudLock,
+              color: Colors.red, //SmashColors.mainDecorations,
+            ),
+            title: Text("GTT"),
+            subtitle: Text(
+              "Export to GeoTaskTracker Server",
+            ),
+            onTap: () {
+              var projectState =
+                  Provider.of<ProjectState>(context, listen: false);
+              var db = projectState.projectDb;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => new GttExportWidget(db)));
             }),
       ]),
     );
