@@ -5,7 +5,7 @@ name: smash
 description: The Smart Mobile Application for Surveyor's Happyness.
 publish_to: none
 
-version: 1.6.4+55 # we keep the build number growing to have it properly handled in android
+version: 1.6.5+56 # we keep the build number growing to have it properly handled in android
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -36,7 +36,7 @@ dependencies:
     # path: ../smashlibs/
     git:
       url: https://github.com/moovida/smashlibs.git
-      ref: 14a32d7
+      ref: 152cd2a
 
   dart_shp: ^0.3.1
 
