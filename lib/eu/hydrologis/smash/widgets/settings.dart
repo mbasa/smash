@@ -176,7 +176,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           color: Colors.red, //SmashColors.mainDecorations,
         ),
         title: SmashUI.normalText("GTT"),
-        subtitle: Text("GeoTaskTracker Server"),
+        subtitle: Text(SL
+            .of(context)
+            .settings_geoTaskTrackerServer), //"GeoTaskTracker Server"
         trailing: Icon(Icons.arrow_right),
         onTap: () {
           _selectedSetting = GttSettings();
@@ -2405,13 +2407,19 @@ class GttSettingsState extends State<GttSettings> with AfterLayoutMixin {
                         children: <Widget>[
                           Padding(
                             padding: SmashUI.defaultPadding(),
-                            child: SmashUI.normalText("Server URL", bold: true),
+                            child: SmashUI.normalText(
+                                SL
+                                    .of(context)
+                                    .settings_serverUrl, //"Server URL"
+                                bold: true),
                           ),
                           Padding(
                               padding: EdgeInsets.only(
                                   top: p, bottom: p, right: p, left: 2 * p),
                               child: EditableTextField(
-                                "server url",
+                                SL
+                                    .of(context)
+                                    .settings_serverUrl, //"server url"
                                 _gttUrl,
                                 (res) async {
                                   if (res == null || res.trim().length == 0) {
@@ -2430,7 +2438,9 @@ class GttSettingsState extends State<GttSettings> with AfterLayoutMixin {
                                       text.startsWith("https://")) {
                                     return null;
                                   } else {
-                                    return "Server url needs to start with http or https.";
+                                    return SL
+                                        .of(context)
+                                        .settings_serverUrlStartWithHttp; //"Server url needs to start with http or https."
                                   }
                                 },
                               )),
@@ -2447,14 +2457,19 @@ class GttSettingsState extends State<GttSettings> with AfterLayoutMixin {
                         children: <Widget>[
                           Padding(
                             padding: SmashUI.defaultPadding(),
-                            child: SmashUI.normalText("Server Username",
+                            child: SmashUI.normalText(
+                                SL
+                                    .of(context)
+                                    .settings_serverUsername, //"Server Username"
                                 bold: true),
                           ),
                           Padding(
                               padding: EdgeInsets.only(
                                   top: p, bottom: p, right: p, left: 2 * p),
                               child: EditableTextField(
-                                "server username",
+                                SL
+                                    .of(context)
+                                    .settings_serverUsername, //"server username"
                                 _gttUser,
                                 (res) async {
                                   if (res == null || res.trim().length == 0) {
@@ -2472,7 +2487,9 @@ class GttSettingsState extends State<GttSettings> with AfterLayoutMixin {
                                   if (text.toString().trim().isNotEmpty) {
                                     return null;
                                   } else {
-                                    return "Please enter a valid server username.";
+                                    return SL
+                                        .of(context)
+                                        .settings_pleaseEnterValidUsername; //"Please enter a valid server username."
                                   }
                                 },
                                 isPassword: false,
@@ -2490,14 +2507,19 @@ class GttSettingsState extends State<GttSettings> with AfterLayoutMixin {
                         children: <Widget>[
                           Padding(
                             padding: SmashUI.defaultPadding(),
-                            child: SmashUI.normalText("Server Password",
+                            child: SmashUI.normalText(
+                                SL
+                                    .of(context)
+                                    .settings_serverPassword, //"Server Password"
                                 bold: true),
                           ),
                           Padding(
                               padding: EdgeInsets.only(
                                   top: p, bottom: p, right: p, left: 2 * p),
                               child: EditableTextField(
-                                "server password",
+                                SL
+                                    .of(context)
+                                    .settings_serverPassword, //"server password"
                                 _gttPwd,
                                 (res) async {
                                   if (res == null || res.trim().length == 0) {
@@ -2515,7 +2537,9 @@ class GttSettingsState extends State<GttSettings> with AfterLayoutMixin {
                                   if (text.toString().trim().isNotEmpty) {
                                     return null;
                                   } else {
-                                    return "Please enter a valid server password.";
+                                    return SL
+                                        .of(context)
+                                        .settings_pleaseEnterValidPassword; //"Please enter a valid server password."
                                   }
                                 },
                                 isPassword: true,

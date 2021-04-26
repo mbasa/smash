@@ -76,6 +76,7 @@
   "exportWidget_geopackageExported": "Geopackage exported",
   "exportWidget_exportToGeopackage": "Export project to Geopackage",
   "exportWidget_exportToGSS": "Export to Geopaparazzi Survey Server",
+  "exportWidget_exportToGTT": "Export to GeoTaskTracker Server",
 
   "@gss_export": {
     "context": "smash/export/gss_export.dart"
@@ -99,6 +100,40 @@
   "gssExport_images": "Images:",
   "gssExport_shouldNotHappen": "Should not happen",
   "gssExport_upload": "Upload",
+
+
+  "@gttExport": {
+    "context": "smash/export/gtt_export.dart"
+  },
+  "gttExport_chooseGttProject": "Choose GTT Project:",
+  "gttExport_gttExport": "GTT Export",
+  "gttExport_setProjectDirty": "Set project to DIRTY?",
+  "gttExport_thisCantBeUndone": "This can't be undone!",
+  "gttExport_restoreProjectAsDirty": "Restore project as all dirty.",
+  "gttExport_setProjectToClean": "Set project to CLEAN?",
+  "gttExport_restoreProjectAsClean": "Restore project as all clean.",
+  "gttExport_nothingToSync": "Nothing to sync.",
+  "gttExport_collectingSyncStats": "Collecting sync stats...",
+  "gttExport_unableToSyncDueToError": "Unable to sync due to an error, check diagnostics.",
+  "gttExport_noGttServerUrlSet": "No GTT server url has been set. Check your settings.",
+  "gttExport_noGttPasswordSet": "No GTT server password has been set. Check your settings.",
+  "gttExport_noGttUserSet": "No GTT server user has been set. Check your settings.",
+  "gttExport_unableToRetrieveProjects": "Unable to retrieve GTT Projects List. Check your settings.",
+  "gttExport_unableToRetrieveApiKey": "Unable to retrieve GTT Api Key. Check your settings.",
+  "gttExport_syncStats": "Sync Stats",
+  "gttExport_dataUploadedUponSync": "The following data will be uploaded upon sync.",
+  "gttExport_gpsLogs": "Gps Logs",
+  "gttExport_simpleNotes": "Simple Notes",
+  "gttExport_formNotes": "Form Notes",
+  "gttExport_images": "Images",
+  "gttExport_uploadingData": "Uploading data",
+  "gttExport_shouldNotHappen": "Should not happen",
+  "gttExport_upload": "Upload",
+  "gttExport_formNotesUpload": "Form Notes Upload",
+  "gttExport_formsUploadedToGttServer": "Forms uploaded to GTT Server",
+  "gttExport_simpleNotesUpload": "Simple Notes Upload ",
+  "gttExport_notesUploadedToGttServer": "Notes uploaded to GTT Server",
+
 
   "@geocoding": {
     "context": "smash/gps/geocoding.dart"
@@ -137,11 +172,35 @@
   "gssImport_tagsDownloadedFormsFolder":  "Tags files are downloaded into the forms folder.",
   "gssImport_noTagsAvailable":  "No tags available.",
 
+  "@gttImport": {
+    "context": "smash/import/gtt_import.dart"
+  },
+  "gttImport_gttImport": "GTT Import",
+  "gttImport_nothingToSync" : "Nothing to sync.",
+  "gttImport_collectingSyncStats" : "Collecting sync stats...",
+  "gttImport_unableToSyncDueToError" : "Unable to sync due to an error, check diagnostics.",
+  "gttImport_noGttServerUrl" : "No GTT server url has been set. Check your settings.",
+  "gttImport_noGttServerPassword" : "No GTT server password has been set. Check your settings.",
+  "gttImport_noGttServerUser" : "No GTT server user has been set. Check your settings.",
+  "gttImport_unableToRetrieveProjects" : "Unable to retrieve GTT Projects List. Check your settings.",
+  "gttImport_unableToRetrieveApiKey" : "Unable to retrieve GTT Api Key. Check your settings.",
+  "gttImport_importProjectForm" : "Import Project Forms",
+  "gttImport_importFormsFromGttServer" : "Import Forms from GTT Server Projects",
+  "gttImport_importingForms" : "Importing Forms",
+  "gttImport_shouldNotHappen" : "Should not happen",
+  "gttImport_import" : "Import",
+  "gttImport_projectFormImport" : "Project Form Import ",
+  "gttImport_projectFormImported" : "Project Form imported from GTT Server",
+  "gttImport_singleProject": "Single Project",
+  "gttImport_allProjects": "All Projects",
+  "gttImport_chooseGttProject":"Choose GTT Project:",
+
   "@importWidget": {
     "context": "smash/import/import_widget.dart"
   },
   "importWidget_import": "Import",
   "importWidget_importFromGeopaparazzi": "Import from Geopaparazzi Survey Server",
+  "importWidget_importFromGeoTaskTracker": "Import from GeoTaskTracker Server",
 
 
   "@layersView": {
@@ -522,6 +581,10 @@
   "settings_serverUrlStartWithHttp": "Server url needs to start with http or https.",
   "settings_serverPassword": "Server Password",
   "settings_allowSelfSignedCert": "Allow self signed certificates",
+  "settings_geoTaskTrackerServer": "GeoTaskTracker Server",
+  "settings_serverUsername": "Server Username",
+  "settings_pleaseEnterValidUsername":"Please enter a valid server username.",
+
 
   "@toolbarTools": {
     "context": "smash/widgets/toolbar_tools.dart"

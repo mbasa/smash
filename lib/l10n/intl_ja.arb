@@ -76,6 +76,7 @@
   "exportWidget_geopackageExported": "ジオパッケージがエクスポートされました",
   "exportWidget_exportToGeopackage": "プロジェクトをGeopackageにエクスポート",
   "exportWidget_exportToGSS": "Geopaparazzi Survey Serverにエクスポート",
+  "exportWidget_exportToGTT": "GeoTaskTracker Serverにエクスポート",
 
 
   "@gss_export": {
@@ -101,6 +102,38 @@
   "gssExport_shouldNotHappen": "発生してはならない",
   "gssExport_upload": "アップロード",
 
+  "@gttExport": {
+    "context": "smash/export/gtt_export.dart"
+  },
+  "gttExport_chooseGttProject": "GTTプロジェクトを選択:",
+  "gttExport_gttExport": "GTTエクスポート",
+  "gttExport_setProjectDirty": "プロジェクトをDIRTYに設定しますか？",
+  "gttExport_thisCantBeUndone": "これは元に戻せません！",
+  "gttExport_restoreProjectAsDirty": "プロジェクトをすべてダーティとして復元します。",
+  "gttExport_setProjectToClean": "プロジェクトをCLEANに設定しますか？",
+  "gttExport_restoreProjectAsClean": "プロジェクトをすべてクリーンな状態で復元します。",
+  "gttExport_nothingToSync": "同期するものがありません。",
+  "gttExport_collectingSyncStats": "同期統計を収集しています...",
+  "gttExport_unableToSyncDueToError": "エラーのため同期できません。診断を確認してください。",
+  "gttExport_noGttServerUrlSet": "GTTサーバーのURLが設定されていません。設定を確認してください。",
+  "gttExport_noGttPasswordSet": "GTTサーバーのパスワードが設定されていません。設定を確認してください。",
+  "gttExport_noGttUserSet": "GTTサーバーユーザーが設定されていません。設定を確認してください。",
+  "gttExport_unableToRetrieveProjects": "GTTプロジェクトリストを取得できません。設定を確認してください。",
+  "gttExport_unableToRetrieveApiKey": "GTT Apiキーを取得できません。設定を確認してください。",
+  "gttExport_syncStats": "同期統計",
+  "gttExport_dataUploadedUponSync": "次のデータは同期時にアップロードされます。",
+  "gttExport_gpsLogs": "Gps ログ",
+  "gttExport_simpleNotes": "シンプルノート",
+  "gttExport_formNotes": "フォームノート",
+  "gttExport_images": "画像",
+  "gttExport_uploadingData": "データのアップロード",
+  "gttExport_shouldNotHappen": "発生してはならない",
+  "gttExport_upload": "アップロード",
+  "gttExport_formNotesUpload": "フォームメモのアップロード",
+  "gttExport_formsUploadedToGttServer": "フォームがGTTサーバーにアップロードされました",
+  "gttExport_simpleNotesUpload": "Simple Notes Upload",
+  "gttExport_notesUploadedToGttServer": "GTTサーバーにアップロードされたメモ",
+  
 
   "@geocoding": {
     "context": "smash/gps/geocoding.dart"
@@ -139,11 +172,36 @@
   "gssImport_tagsDownloadedFormsFolder": "タグファイルはフォームフォルダーにダウンロードされます。",
   "gssImport_noTagsAvailable": "使用可能なタグはありません。",
 
+  "@gttImport": {
+    "context": "smash/import/gtt_import.dart"
+  },
+  "gttImport_gttImport": "GTT Import",
+  "gttImport_nothingToSync": "同期するものがありません。",
+  "gttImport_collectingSyncStats": "同期統計を収集しています...",
+  "gttImport_unableToSyncDueToError": "エラーのため同期できません。診断を確認してください。",
+  "gttImport_noGttServerUrl": "GTTサーバーのURLが設定されていません。設定を確認してください。",
+  "gttImport_noGttServerPassword": "GTTサーバーのパスワードが設定されていません。設定を確認してください。",
+  "gttImport_noGttServerUser": "GTTサーバーユーザーが設定されていません。設定を確認してください。",
+  "gttImport_unableToRetrieveProjects": "GTTプロジェクトリストを取得できません。設定を確認してください。",
+  "gttImport_unableToRetrieveApiKey": "GTT Apiキーを取得できません。設定を確認してください。",
+  "gttImport_importProjectForm": "プロジェクトフォームのインポート",
+  "gttImport_importFormsFromGttServer": "GTTサーバープロジェクトからフォームをインポート",
+  "gttImport_importingForms": "フォームのインポート",
+  "gttImport_shouldNotHappen": "発生してはならない",
+  "gttImport_import": "インポート",
+  "gttImport_projectFormImport": "プロジェクトフォームのインポート",
+  "gttImport_projectFormImported": "GTTサーバーからインポートされたプロジェクトフォーム",
+  "gttImport_singleProject": "単一プロジェクト",
+  "gttImport_allProjects": "すべてのプロジェクト",
+  "gttImport_chooseGttProject": "GTTプロジェクトを選択:",
+
+
   "@importWidget": {
     "context": "smash/import/import_widget.dart"
   },
   "importWidget_import": "インポート",
   "importWidget_importFromGeopaparazzi": "Geopaparazzi Survey Serverからインポート",
+  "importWidget_importFromGeoTaskTracker": "GeoTaskTrackerサーバーからインポート",
 
   "@layersView": {
     "context": "smash/maps/layers/core/layersview.dart"
@@ -526,6 +584,10 @@
   "settings_serverUrlStartWithHttp": "サーバーのURLはhttpまたはhttpsで始まる必要があります。",
   "settings_serverPassword": "サーバーパスワード",
   "settings_allowSelfSignedCert": "自己署名証明書を許可する",
+  "settings_geoTaskTrackerServer": "GeoTaskTrackerサーバー",
+  "settings_serverUsername": "サーバーユーザー名",
+  "settings_pleaseEnterValidUsername": "有効なサーバーユーザー名を入力してください。",
+
 
   "@toolbarTools": {
     "context": "smash/widgets/toolbar_tools.dart"

@@ -232,7 +232,9 @@ class _ExportWidgetState extends State<ExportWidget> {
             ),
             title: Text("GTT"),
             subtitle: Text(
-              "Export to GeoTaskTracker Server",
+              SL
+                  .of(context)
+                  .exportWidget_exportToGTT, //"Export to GeoTaskTracker Server"
             ),
             onTap: () {
               var projectState =

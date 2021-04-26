@@ -14,6 +14,7 @@ import 'package:smash/eu/hydrologis/smash/gtt/gtt_uilities.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/images.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/notes.dart';
 import 'package:smash/eu/hydrologis/smash/project/project_database.dart';
+import 'package:smash/generated/l10n.dart';
 import 'package:smashlibs/smashlibs.dart';
 
 class GttExportWidget extends StatefulWidget {
@@ -162,7 +163,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SmashUI.normalText(
-              "Choose GTT Project:",
+              SL.of(context).gttExport_chooseGttProject, //"Choose GTT Project:"
               bold: true,
               color: Colors.blue,
             ),
@@ -177,14 +178,20 @@ class _GttExportWidgetState extends State<GttExportWidget> {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("GTT Export"),
+        title: new Text(SL.of(context).gttExport_gttExport), //"GTT Export"
         actions: _status < 2
             ? <Widget>[
                 IconButton(
                   icon: Icon(MdiIcons.restore),
                   onPressed: () async {
-                    var doIt = await SmashDialogs.showConfirmDialog(context,
-                        "Set project to DIRTY?", "This can't be undone!");
+                    var doIt = await SmashDialogs.showConfirmDialog(
+                        context,
+                        SL
+                            .of(context)
+                            .gttExport_setProjectDirty, //"Set project to DIRTY?"
+                        SL
+                            .of(context)
+                            .gttExport_thisCantBeUndone); //"This can't be undone!"
                     if (doIt) {
                       widget.projectDb.updateDirty(true);
                       setState(() {
@@ -193,13 +200,21 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                       gatherStats();
                     }
                   },
-                  tooltip: "Restore project as all dirty.",
+                  tooltip: SL
+                      .of(context)
+                      .gttExport_restoreProjectAsDirty, //"Restore project as all dirty."
                 ),
                 IconButton(
                   icon: Icon(MdiIcons.wiperWash),
                   onPressed: () async {
-                    var doIt = await SmashDialogs.showConfirmDialog(context,
-                        "Set project to CLEAN?", "This can't be undone!");
+                    var doIt = await SmashDialogs.showConfirmDialog(
+                        context,
+                        SL
+                            .of(context)
+                            .gttExport_setProjectToClean, //"Set project to CLEAN?"
+                        SL
+                            .of(context)
+                            .gttExport_thisCantBeUndone); //"This can't be undone!"
                     if (doIt) {
                       widget.projectDb.updateDirty(false);
                       setState(() {
@@ -208,69 +223,77 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                       gatherStats();
                     }
                   },
-                  tooltip: "Restore project as all clean.",
+                  tooltip: SL
+                      .of(context)
+                      .gttExport_restoreProjectAsClean, //"Restore project as all clean."
                 ),
               ]
             : <Widget>[],
       ),
       body: _status == -1
-          ? Center(child: SmashUI.errorWidget("Nothing to sync.", bold: true))
+          ? Center(
+              child: SmashUI.errorWidget(
+                  SL.of(context).gttExport_nothingToSync, //"Nothing to sync."
+                  bold: true))
           : _status == 0
               ? Center(
-                  child:
-                      SmashCircularProgress(label: "Collecting sync stats..."),
+                  child: SmashCircularProgress(
+                      label: SL
+                          .of(context)
+                          .gttExport_collectingSyncStats), //"Collecting sync stats..."
                 )
               : _status == 12
                   ? Center(
                       child: Padding(
                         padding: SmashUI.defaultPadding(),
-                        child: SmashUI.errorWidget(
-                            "Unable to sync due to an error, check diagnostics."),
+                        child: SmashUI.errorWidget(SL
+                            .of(context)
+                            .gttExport_unableToSyncDueToError), //"Unable to sync due to an error, check diagnostics."
                       ),
                     )
                   : _status == 11
                       ? Center(
                           child: Padding(
                             padding: SmashUI.defaultPadding(),
-                            child: SmashUI.titleText(
-                                "No GTT server url has been set. "
-                                "Check your settings."),
+                            child: SmashUI.titleText(SL
+                                .of(context)
+                                .gttExport_noGttServerUrlSet), //"No GTT server url has been set. Check your settings."
                           ),
                         )
                       : _status == 10
                           ? Center(
                               child: Padding(
                                 padding: SmashUI.defaultPadding(),
-                                child: SmashUI.titleText(
-                                    "No GTT server password has been set. "
-                                    "Check your settings."),
+                                child: SmashUI.titleText(SL
+                                    .of(context)
+                                    .gttExport_noGttPasswordSet), //"No GTT server password has been set. Check your settings."
                               ),
                             )
                           : _status == 9
                               ? Center(
                                   child: Padding(
                                     padding: SmashUI.defaultPadding(),
-                                    child: SmashUI.titleText(
-                                        "No GTT server user has been set. "
-                                        "Check your settings."),
+                                    child: SmashUI.titleText(SL
+                                        .of(context)
+                                        .gttExport_noGttUserSet), //"No GTT server user has been set. Check your settings."
                                   ),
                                 )
                               : _status == 7
                                   ? Center(
                                       child: Padding(
                                         padding: SmashUI.defaultPadding(),
-                                        child: SmashUI.titleText(
-                                            "Unable to retrieve GTT Projects "
-                                            "List. Check your settings."),
+                                        child: SmashUI.titleText(SL
+                                            .of(context)
+                                            .gttExport_unableToRetrieveProjects), //"Unable to retrieve GTT Projects List. Check your settings."
                                       ),
                                     )
                                   : _status == 8
                                       ? Center(
                                           child: Padding(
                                             padding: SmashUI.defaultPadding(),
-                                            child: SmashUI.titleText(
-                                                "Unable to retrieve GTT Api Key. "
-                                                "Check your settings."),
+                                            child: SmashUI.titleText(SL
+                                                .of(context)
+                                                .gttExport_unableToRetrieveApiKey), //"Unable to retrieve GTT Api Key. Check your settings."
                                           ),
                                         )
                                       : _status == 1
@@ -285,14 +308,18 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                                                     padding: SmashUI
                                                         .defaultPadding(),
                                                     child: SmashUI.titleText(
-                                                        "Sync Stats",
+                                                        SL
+                                                            .of(context)
+                                                            .gttExport_syncStats, //"Sync Stats"
                                                         bold: true),
                                                   ),
                                                   Padding(
                                                     padding: SmashUI
                                                         .defaultPadding(),
                                                     child: SmashUI.smallText(
-                                                        "The following data will be uploaded upon sync.",
+                                                        SL
+                                                            .of(context)
+                                                            .gttExport_dataUploadedUponSync, //"The following data will be uploaded upon sync."
                                                         color: Colors.grey),
                                                   ),
                                                   Expanded(
@@ -306,7 +333,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                                                                 .mainDecorations,
                                                           ),
                                                           title: SmashUI.normalText(
-                                                              "Gps Logs: $_gpsLogCount"),
+                                                              "${SL.of(context).gttExport_gpsLogs}: $_gpsLogCount"), //"Gps Logs:"
                                                         ),
                                                         ListTile(
                                                           leading: Icon(
@@ -316,7 +343,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                                                                 .mainDecorations,
                                                           ),
                                                           title: SmashUI.normalText(
-                                                              "Simple Notes: $_simpleNotesCount"),
+                                                              "${SL.of(context).gttExport_simpleNotes}: $_simpleNotesCount"), //"Simple Notes"
                                                         ),
                                                         ListTile(
                                                           leading: Icon(
@@ -326,7 +353,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                                                                 .mainDecorations,
                                                           ),
                                                           title: SmashUI.normalText(
-                                                              "Form Notes: $_formNotesCount"),
+                                                              "${SL.of(context).gttExport_formNotes}: $_formNotesCount"), //
                                                         ),
                                                         ListTile(
                                                           leading: Icon(
@@ -336,7 +363,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                                                                 .mainDecorations,
                                                           ),
                                                           title: SmashUI.normalText(
-                                                              "Images: $_imagesCount"),
+                                                              "${SL.of(context).gttExport_images}: $_imagesCount"), //"Images"
                                                         ),
                                                       ],
                                                     ),
@@ -348,16 +375,18 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                                               ? Center(
                                                   child: !_uploadCompleted
                                                       ? SmashCircularProgress(
-                                                          label:
-                                                              "Uploading data")
+                                                          label: SL
+                                                              .of(context)
+                                                              .gttExport_uploadingData) //"Uploading data"
                                                       : ListView(
                                                           children:
                                                               _uploadTiles,
                                                         ),
                                                 )
                                               : Container(
-                                                  child:
-                                                      Text("Should not happen"),
+                                                  child: Text(SL
+                                                      .of(context)
+                                                      .gttExport_shouldNotHappen), //"Should not happen"
                                                 ),
       floatingActionButton: _status < 2 && _status != -1
           ? FloatingActionButton.extended(
@@ -370,10 +399,10 @@ class _GttExportWidgetState extends State<GttExportWidget> {
                     _status = 2;
                     _uploadCompleted = false;
                   });
-                  uploadProjectData();
+                  uploadProjectData(context);
                 }
               },
-              label: Text("Upload"))
+              label: Text(SL.of(context).gttExport_upload)) //"Upload"
           : null,
     );
   }
@@ -419,7 +448,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
     return retVal;
   }
 
-  Future uploadProjectData() async {
+  Future uploadProjectData(BuildContext context) async {
     var db = widget.projectDb;
     int uploadCount = 0;
 
@@ -447,7 +476,8 @@ class _GttExportWidgetState extends State<GttExportWidget> {
       }
     }
     _uploadTiles.add(GttUtilities.getResultTile(
-        "Form Notes Upload", "$uploadCount Forms uploaded to GTT Server"));
+        SL.of(context).gttExport_formNotesUpload, //"Form Notes Upload"
+        "$uploadCount ${SL.of(context).gttExport_formsUploadedToGttServer}")); //"Forms uploaded to GTT Server"
 
     /**
      * Simple Notes Upload
@@ -472,7 +502,8 @@ class _GttExportWidgetState extends State<GttExportWidget> {
       }
     }
     _uploadTiles.add(GttUtilities.getResultTile(
-        "Simple Notes Upload ", "$uploadCount Notes uploaded to GTT Server"));
+        SL.of(context).gttExport_simpleNotesUpload, //"Simple Notes Upload "
+        "$uploadCount ${SL.of(context).gttExport_notesUploadedToGttServer}")); //"Notes uploaded to GTT Server"
 
     /**
      * Image Upload

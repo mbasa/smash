@@ -49,7 +49,9 @@ class _ImportWidgetState extends State<ImportWidget> {
               color: Colors.red, //SmashColors.mainDecorations,
             ),
             title: Text("GTT"),
-            subtitle: Text("Import from GeoTaskTracker Server"),
+            subtitle: Text(SL
+                .of(context)
+                .importWidget_importFromGeoTaskTracker), //"Import from GeoTaskTracker Server"
             onTap: () {
               Navigator.push(
                 context,

@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:dart_hydrologis_utils/dart_hydrologis_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:smash/eu/hydrologis/smash/gtt/gtt_uilities.dart';
+import 'package:smash/generated/l10n.dart';
 import 'package:smashlibs/smashlibs.dart';
 
 class GttImportWidget extends StatefulWidget {
@@ -135,8 +136,10 @@ class _GttImportWidgetState extends State<GttImportWidget> {
           children: [
             ToggleButtons(
               children: [
-                Text("      Single Project      "),
-                Text("      All Projects      "),
+                Text(
+                    " ${SL.of(context).gttImport_singleProject}"), //"Single Project"
+                Text(
+                    " ${SL.of(context).gttImport_allProjects}"), //"All Projects"
               ],
               isSelected: _projectSelected,
               onPressed: (index) => setState(() {
@@ -151,7 +154,7 @@ class _GttImportWidgetState extends State<GttImportWidget> {
               height: 32.0,
             ),
             SmashUI.normalText(
-              "Choose GTT Project:",
+              SL.of(context).gttImport_chooseGttProject, //"Choose GTT Project:"
               bold: true,
               color: Colors.blue,
             ),
@@ -169,67 +172,73 @@ class _GttImportWidgetState extends State<GttImportWidget> {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("GTT Import"),
+        title: new Text(SL.of(context).gttImport_gttImport), //"GTT Import"
         actions: <Widget>[],
       ),
       body: _status == -1
-          ? Center(child: SmashUI.errorWidget("Nothing to sync.", bold: true))
+          ? Center(
+              child: SmashUI.errorWidget(
+                  SL.of(context).gttImport_nothingToSync, //"Nothing to sync."
+                  bold: true))
           : _status == 0
               ? Center(
-                  child:
-                      SmashCircularProgress(label: "Collecting sync stats..."),
+                  child: SmashCircularProgress(
+                      label: SL
+                          .of(context)
+                          .gttImport_collectingSyncStats), //"Collecting sync stats..."
                 )
               : _status == 12
                   ? Center(
                       child: Padding(
                         padding: SmashUI.defaultPadding(),
-                        child: SmashUI.errorWidget(
-                            "Unable to sync due to an error, check diagnostics."),
+                        child: SmashUI.errorWidget(SL
+                            .of(context)
+                            .gttImport_unableToSyncDueToError), //"Unable to sync due to an error, check diagnostics."
                       ),
                     )
                   : _status == 11
                       ? Center(
                           child: Padding(
                             padding: SmashUI.defaultPadding(),
-                            child: SmashUI.titleText(
-                                "No GTT server url has been set. "
-                                "Check your settings."),
+                            child: SmashUI.titleText(SL
+                                .of(context)
+                                .gttImport_noGttServerUrl), //"No GTT server url has been set. Check your settings."
                           ),
                         )
                       : _status == 10
                           ? Center(
                               child: Padding(
                                 padding: SmashUI.defaultPadding(),
-                                child: SmashUI.titleText(
-                                    "No GTT server password has been set. "
-                                    "Check your settings."),
+                                child: SmashUI.titleText(SL
+                                    .of(context)
+                                    .gttImport_noGttServerPassword), //"No GTT server password has been set. Check your settings."
                               ),
                             )
                           : _status == 9
                               ? Center(
                                   child: Padding(
                                     padding: SmashUI.defaultPadding(),
-                                    child: SmashUI.titleText(
-                                        "No GTT server user has been set. "
-                                        "Check your settings."),
+                                    child: SmashUI.titleText(SL
+                                        .of(context)
+                                        .gttImport_noGttServerUser), //"No GTT server user has been set. Check your settings."
                                   ),
                                 )
                               : _status == 7
                                   ? Center(
                                       child: Padding(
                                         padding: SmashUI.defaultPadding(),
-                                        child: SmashUI.titleText(
-                                            "Unable to retrieve GTT Projects "
-                                            "List. Check your settings."),
+                                        child: SmashUI.titleText(SL
+                                            .of(context)
+                                            .gttImport_unableToRetrieveProjects), //"Unable to retrieve GTT Projects List. Check your settings."
                                       ),
                                     )
                                   : _status == 8
                                       ? Center(
                                           child: Padding(
                                             padding: SmashUI.defaultPadding(),
-                                            child: SmashUI.titleText(
-                                                "Unable to retrieve GTT Api Key. "
-                                                "Check your settings."),
+                                            child: SmashUI.titleText(SL
+                                                .of(context)
+                                                .gttImport_unableToRetrieveApiKey), //"Unable to retrieve GTT Api Key. Check your settings."
                                           ),
                                         )
                                       : _status == 1
@@ -244,14 +253,18 @@ class _GttImportWidgetState extends State<GttImportWidget> {
                                                     padding: SmashUI
                                                         .defaultPadding(),
                                                     child: SmashUI.titleText(
-                                                        "Import Project Forms",
+                                                        SL
+                                                            .of(context)
+                                                            .gttImport_importProjectForm, //"Import Project Forms"
                                                         bold: true),
                                                   ),
                                                   Padding(
                                                     padding: SmashUI
                                                         .defaultPadding(),
                                                     child: SmashUI.smallText(
-                                                        "Import Forms from GTT Server Projects",
+                                                        SL
+                                                            .of(context)
+                                                            .gttImport_importFormsFromGttServer, //"Import Forms from GTT Server Projects"
                                                         color: Colors.grey),
                                                   ),
                                                   SizedBox(
@@ -271,16 +284,18 @@ class _GttImportWidgetState extends State<GttImportWidget> {
                                               ? Center(
                                                   child: !_importCompleted
                                                       ? SmashCircularProgress(
-                                                          label:
-                                                              "Importing Forms")
+                                                          label: SL
+                                                              .of(context)
+                                                              .gttImport_importingForms) //"Importing Forms"
                                                       : ListView(
                                                           children:
                                                               _uploadTiles,
                                                         ),
                                                 )
                                               : Container(
-                                                  child:
-                                                      Text("Should not happen"),
+                                                  child: Text(SL
+                                                      .of(context)
+                                                      .gttImport_shouldNotHappen), //"Should not happen"
                                                 ),
       floatingActionButton: _status < 2 && _status != -1
           ? FloatingActionButton.extended(
@@ -296,7 +311,7 @@ class _GttImportWidgetState extends State<GttImportWidget> {
                   importProjectForm();
                 }
               },
-              label: Text("Import"))
+              label: Text(SL.of(context).gttImport_import)) //"Import"
           : null,
     );
   }
@@ -332,7 +347,8 @@ class _GttImportWidgetState extends State<GttImportWidget> {
     }
 
     _uploadTiles.add(GttUtilities.getResultTile(
-        "Project Form Import ", "$count Project Form imported from GTT Server",
+        SL.of(context).gttImport_projectFormImport, //"Project Form Import "
+        "$count ${SL.of(context).gttImport_projectFormImported}", //"Project Form imported from GTT Server"
         isImport: true));
 
     setState(() {
