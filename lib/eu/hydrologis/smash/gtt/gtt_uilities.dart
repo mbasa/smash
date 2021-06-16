@@ -288,7 +288,7 @@ class GttUtilities {
           }
         }
       } else {
-        description = note.form;
+        description = "UNSUPPORTED FORM: \n\n${note.form}";
       }
     }
 
