@@ -36,11 +36,11 @@ dependencies:
     # path: ../smashlibs/
     git:
       url: https://github.com/moovida/smashlibs.git
-      ref: 152cd2a
+      ref: fa586c2
 
   dart_shp: ^0.3.1
 
-  dart_hydrologis_utils: ^0.5.4
+  dart_hydrologis_utils: ^0.5.5
     # path: ../dart_hydrologis_utils/
   dart_jts: ^0.0.7
     # path: ../dart_jts/
@@ -68,7 +68,7 @@ dependencies:
       # url: https://github.com/ibrierley/flutter_map_line_editor.git  
 
   # MIT
-  sqlite3_flutter_libs: ^0.3.0
+  sqlite3_flutter_libs: ^0.4.0
 
   # BSD
   flutter_map: ^0.10.1
@@ -103,6 +103,9 @@ dependencies:
   extended_image: #^2.0.0
     git:
       url: https://github.com/moovida/extended_image
+
+  # BSD
+  fl_chart: ^0.36.0
 
   # MIT
   permission_handler: ^5.1.0
