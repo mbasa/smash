@@ -133,7 +133,8 @@
   "gttExport_formsUploadedToGttServer": "フォームがGTTサーバーにアップロードされました",
   "gttExport_simpleNotesUpload": "Simple Notes Upload",
   "gttExport_notesUploadedToGttServer": "GTTサーバーにアップロードされたメモ",
-  
+  "gttExport_simpleLogsUpload": "GPSログのアップロード ",
+  "gttExport_logsUploadedToGttServer": "ログがGTTサーバーにアップロードされました",
 
   "@geocoding": {
     "context": "smash/gps/geocoding.dart"
