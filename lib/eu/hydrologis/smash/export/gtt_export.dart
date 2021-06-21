@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smash/eu/hydrologis/smash/gtt/gtt_uilities.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/images.dart';
+import 'package:smash/eu/hydrologis/smash/project/objects/logs.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/notes.dart';
 import 'package:smash/eu/hydrologis/smash/project/project_database.dart';
 import 'package:smash/generated/l10n.dart';
@@ -407,40 +408,37 @@ class _GttExportWidgetState extends State<GttExportWidget> {
     );
   }
 
-  Future<List<Map<String, dynamic>>> uploadImageData(Note note, var db) async {
+  Future<List<Map<String, dynamic>>> uploadImageData(
+      List<String> imageIds, var db) async {
     List<Map<String, dynamic>> retVal = [];
 
-    if (note.hasForm()) {
-      List<String> imageIds = FormUtilities.getImageIds(note.form);
+    if (imageIds.isNotEmpty) {
+      for (String imageId in imageIds) {
+        debugPrint("ImageID: $imageId");
 
-      if (imageIds.isNotEmpty) {
-        for (String imageId in imageIds) {
-          debugPrint("ImageID: $imageId");
+        DbImage dbImage = db.getImageById(int.parse(imageId));
+        Uint8List imageBytes = db.getImageDataBytes(dbImage.imageDataId);
 
-          DbImage dbImage = db.getImageById(int.parse(imageId));
-          Uint8List imageBytes = db.getImageDataBytes(dbImage.imageDataId);
+        String imageName = "img_$imageId.jpg";
 
-          String imageName = "img_$imageId.jpg";
+        Map<String, dynamic> ret =
+            await GttUtilities.postImage(imageBytes, imageName);
 
-          Map<String, dynamic> ret =
-              await GttUtilities.postImage(imageBytes, imageName);
+        if (ret["status_code"] == 201) {
+          Map<String, dynamic> retData = ret["status_data"];
+          String token = retData["upload"]["token"];
 
-          if (ret["status_code"] == 201) {
-            Map<String, dynamic> retData = ret["status_data"];
-            String token = retData["upload"]["token"];
+          debugPrint("Image Upload status_code: ${ret["status_code"]}, "
+              "token: $token "
+              "status_data: ${ret["status_data"].toString()} ");
 
-            debugPrint("Image Upload status_code: ${ret["status_code"]}, "
-                "token: $token "
-                "status_data: ${ret["status_data"].toString()} ");
+          Map<String, dynamic> r = {
+            "token": token,
+            "filename": imageName,
+            "content_type": "image/jpg",
+          };
 
-            Map<String, dynamic> r = {
-              "token": token,
-              "filename": imageName,
-              "content_type": "image/jpg",
-            };
-
-            retVal.add(r);
-          }
+          retVal.add(r);
         }
       }
     }
@@ -460,7 +458,9 @@ class _GttExportWidgetState extends State<GttExportWidget> {
     List<Note> formNotes = db.getNotes(doSimple: false, onlyDirty: true);
 
     for (Note note in formNotes) {
-      List<Map<String, dynamic>> uploads = await uploadImageData(note, db);
+      List<String> imageIds = FormUtilities.getImageIds(note.form);
+
+      List<Map<String, dynamic>> uploads = await uploadImageData(imageIds, db);
 
       Map<String, dynamic> ret = await GttUtilities.postIssue(
           GttUtilities.createIssue(note, _selectedProj, uploads));
@@ -486,7 +486,9 @@ class _GttExportWidgetState extends State<GttExportWidget> {
     uploadCount = 0;
 
     for (Note note in simpleNotes) {
-      List<Map<String, dynamic>> uploads = await uploadImageData(note, db);
+      List<String> imageIds = FormUtilities.getImageIds(note.form);
+
+      List<Map<String, dynamic>> uploads = await uploadImageData(imageIds, db);
 
       Map<String, dynamic> ret = await GttUtilities.postIssue(
           GttUtilities.createIssue(note, _selectedProj, uploads));
@@ -501,48 +503,62 @@ class _GttExportWidgetState extends State<GttExportWidget> {
         await db.updateNoteDirty(note.id, false);
       }
     }
+
+    /**
+     * Simple Note Image Upload
+     */
+
+    List<DbImage> imagesList = db.getImages(onlyDirty: true);
+    uploadCount = 0;
+
+    for (var image in imagesList) {
+      List<Map<String, dynamic>> uploads =
+          await uploadImageData(["${image.imageDataId}"], db);
+
+      Note note = new Note();
+      note.lat = image.lat;
+      note.lon = image.lon;
+      note.text = "Simple Note Image";
+      note.description = "POI";
+
+      Map<String, dynamic> ret = await GttUtilities.postIssue(
+          GttUtilities.createIssue(note, _selectedProj, uploads));
+
+      if (ret["status_code"] == 201) {
+        uploadCount++;
+
+        note.isDirty = 0;
+        await db.updateImageDirty(image.imageDataId, false);
+      }
+    }
+
     _uploadTiles.add(GttUtilities.getResultTile(
         SL.of(context).gttExport_simpleNotesUpload, //"Simple Notes Upload "
         "$uploadCount ${SL.of(context).gttExport_notesUploadedToGttServer}")); //"Notes uploaded to GTT Server"
 
     /**
-     * Image Upload
-     */
-    /*
-    List<DbImage> imagesList = db.getImages(onlyDirty: true);
-
-    for (var image in imagesList) {
-      var uploadWidget = ProjectDataUploadListTileProgressWidget(
-        dio,
-        db,
-        _uploadDataUrl,
-        image,
-        authHeader: _authHeader,
-        orderNotifier: uploadOrder,
-        order: order++,
-      );
-      _uploadTiles.add(uploadWidget);
-    }
+     * GPS Log Upload
      */
 
-    /**
-     * Log Upload
-     */
-    /*
     List<Log> logsList = db.getLogs(onlyDirty: true);
+
     for (Log log in logsList) {
-      var uploadWidget = ProjectDataUploadListTileProgressWidget(
-        dio,
-        db,
-        _uploadDataUrl,
-        log,
-        authHeader: _authHeader,
-        orderNotifier: uploadOrder,
-        order: order++,
-      );
-      _uploadTiles.add(uploadWidget);
+      List<LogDataPoint> points = db.getLogDataPointsById(log.id);
+
+      Map<String, dynamic> ret = await GttUtilities.postIssue(
+          GttUtilities.createLogIssue(log, points, _selectedProj));
+
+      if (ret["status_code"] == 201) {
+        uploadCount++;
+
+        log.isDirty = 0;
+        await db.updateLogDirty(log.id, false);
+      }
     }
-     */
+
+    _uploadTiles.add(GttUtilities.getResultTile(
+        SL.of(context).gttExport_simpleLogsUpload, //"Simple Logs Upload "
+        "$uploadCount ${SL.of(context).gttExport_logsUploadedToGttServer}"));
 
     setState(() {
       _status = 2;

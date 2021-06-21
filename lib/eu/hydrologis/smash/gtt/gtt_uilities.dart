@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smash/eu/hydrologis/smash/project/objects/logs.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/notes.dart';
 import 'package:smashlibs/smashlibs.dart';
 
@@ -212,6 +214,64 @@ class GttUtilities {
     return count;
   }
 
+  static final DEFAULT_TRACKER_ID = 1000000;
+  static final DEFAULT_PRIORITY_ID = 2;
+
+  static Map<String, dynamic> createLogIssue(
+      Log log, List<LogDataPoint> points, String selectedProj) {
+    String geoJson = "{\"type\": \"Feature\",\"properties\": {},"
+        "\"geometry\": {\"type\": \"LineString\",\"coordinates\": [";
+
+    int len = points.length;
+    double maxElev = points.first.altim;
+    double minElev = points.first.altim;
+
+    for (int i = 0; i < len - 1; i++) {
+      geoJson = geoJson + "[${points[i].lon}, ${points[i].lat}],";
+      maxElev = points[i].altim > maxElev ? points[i].altim : maxElev;
+      minElev = points[i].altim < minElev ? points[i].altim : minElev;
+    }
+    geoJson = geoJson + "[${points[len - 1].lon}, ${points[len - 1].lat}]]}}";
+    maxElev = points[len - 1].altim > maxElev ? points[len - 1].altim : maxElev;
+    minElev = points[len - 1].altim < minElev ? points[len - 1].altim : minElev;
+
+    List<Map<String, dynamic>> customFields = [];
+    List<Map<String, dynamic>> uploads = [];
+
+    int trackerId = DEFAULT_TRACKER_ID;
+    int priorityId = DEFAULT_PRIORITY_ID;
+    String isPrivate = "false";
+    String startDate = "";
+    String dueDate = "";
+
+    NumberFormat numFormat = NumberFormat("###,###.0# m");
+    String desc = "GPS Log Length: ${numFormat.format(log.lengthm)}\n"
+        "Minimum Elevation: ${numFormat.format(minElev)}\n"
+        "Maximum Elevation: ${numFormat.format(maxElev)}\n";
+
+    Map<String, dynamic> params = {
+      "project_id": selectedProj,
+      "priority_id": priorityId,
+      "tracker_id": trackerId,
+      "subject": log.text,
+      "description": desc,
+      "is_private": isPrivate,
+      "start_date": startDate,
+      "due_date": dueDate,
+      "custom_fields": customFields,
+      "geojson": geoJson,
+      "uploads": uploads,
+    };
+
+    Map<String, dynamic> issue = {
+      "issue": params,
+    };
+
+    debugPrint("Issue: ${issue.toString()}");
+
+    return issue;
+  }
+
   static Map<String, dynamic> createIssue(
       Note note, String selectedProj, List<Map<String, dynamic>> uploads) {
     String geoJson = "{\"type\": \"Feature\",\"properties\": {},"
@@ -223,8 +283,8 @@ class GttUtilities {
     String description =
         note.description.isEmpty ? "SMASH issue" : note.description;
 
-    int trackerId = 3;
-    int priorityId = 2;
+    int trackerId = DEFAULT_TRACKER_ID;
+    int priorityId = DEFAULT_PRIORITY_ID;
     String isPrivate = "false";
     String startDate = "";
     String dueDate = "";
