@@ -1105,6 +1105,26 @@ class SL {
     );
   }
 
+  /// `GPS Logs Upload `
+  String get gttExport_simpleLogsUpload {
+    return Intl.message(
+      'GPS Logs Upload ',
+      name: 'gttExport_simpleLogsUpload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logs uploaded to GTT Server`
+  String get gttExport_logsUploadedToGttServer {
+    return Intl.message(
+      'Logs uploaded to GTT Server',
+      name: 'gttExport_logsUploadedToGttServer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Geocoding`
   String get geocoding_geocoding {
     return Intl.message(
