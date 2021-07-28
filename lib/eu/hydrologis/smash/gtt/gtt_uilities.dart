@@ -173,29 +173,52 @@ class GttUtilities {
       Map<String, dynamic> params) async {
     Map<String, dynamic> retVal = Map<String, dynamic>();
 
+    String iUrl = params["issue"]["issue_id"] < 0
+        ? "/issues.json"
+        : "/issues/${params["issue"]["issue_id"]}.json";
+
     String url = "${GpPreferences().getStringSync(KEY_GTT_SERVER_URL)}"
-        "/issues.json";
+        "$iUrl";
 
     String apiKey = GpPreferences().getStringSync(KEY_GTT_SERVER_KEY);
 
     try {
       Dio dio = NetworkHelper.getNewDioInstance();
+      Response response;
 
-      Response response = await dio.post(
-        url,
-        options: Options(
-          headers: {
-            "X-Redmine-API-Key": apiKey,
-            "Content-Type": "application/json",
-          },
-        ),
-        data: params,
-      );
+      if (params["issue"]["issue_id"] < 0) {
+        response = await dio.post(
+          url,
+          options: Options(
+            headers: {
+              "X-Redmine-API-Key": apiKey,
+              "Content-Type": "application/json",
+            },
+          ),
+          data: params,
+        );
+      } else {
+        response = await dio.put(
+          url,
+          options: Options(
+            headers: {
+              "X-Redmine-API-Key": apiKey,
+              "Content-Type": "application/json",
+            },
+          ),
+          data: params,
+        );
+      }
 
       retVal = {
         "status_code": response.statusCode,
         "status_message": response.statusMessage,
+        "status_data": response.data,
       };
+
+      debugPrint("Status Code: ${response.statusCode}, "
+          "Status Message: ${response.statusMessage},"
+          "Status Data: ${response.data.toString()}");
     } catch (exception) {
       debugPrint("Issue Error: $exception");
     }
@@ -267,9 +290,35 @@ class GttUtilities {
       "issue": params,
     };
 
-    debugPrint("Issue: ${issue.toString()}");
+    //debugPrint("Issue: ${issue.toString()}");
 
     return issue;
+  }
+
+  static List<Map<String, dynamic>> addIssueToFormItems(
+      List<Map<String, dynamic>> formItems, int issueId) {
+    bool issueExists = false;
+
+    for (Map<String, dynamic> f in formItems) {
+      debugPrint("key: ${f["key"]}");
+      if (f["key"] == "issue_id") {
+        issueExists = true;
+      }
+    }
+
+    if (!issueExists) {
+      Map<String, dynamic> map = {
+        "key": "issue_id",
+        "label": "",
+        "value": issueId,
+        "values": null,
+        "type": "hidden",
+        "mandatory": "yes",
+      };
+      formItems.add(map);
+      debugPrint("*** added issue_id into map ***");
+    }
+    return formItems;
   }
 
   static Map<String, dynamic> createIssue(
@@ -285,6 +334,8 @@ class GttUtilities {
 
     int trackerId = DEFAULT_TRACKER_ID;
     int priorityId = DEFAULT_PRIORITY_ID;
+    int issueId = -999;
+    String doneRatio = "0";
     String isPrivate = "false";
     String startDate = "";
     String dueDate = "";
@@ -292,12 +343,17 @@ class GttUtilities {
     List<Map<String, dynamic>> customFields = [];
 
     if (note.hasForm()) {
-      final form = json.decode(note.form);
+      final Map<String, dynamic> form = json.decode(note.form);
 
       String sectionName = form["sectionname"];
       String sectionDesc = form["sectiondescription"];
 
-      if (sectionName != null && sectionName == "text note") {
+      if (form.containsKey("gtt_issue_id")) {
+        debugPrint("*** Saved Issue Number: ${form["gtt_issue_id"]} ***");
+        issueId = form["gtt_issue_id"];
+      }
+
+      if (sectionName != null && sectionName.toLowerCase() == "text note") {
         for (var f in form["forms"][0]["formitems"]) {
           if (f["key"] == "title") {
             subject = f["value"];
@@ -317,6 +373,9 @@ class GttUtilities {
             case "tracker_id":
               trackerId = int.parse(f["value"]);
               break;
+            case "issue_id":
+              issueId = int.parse(f["value"]);
+              break;
             case "priority_id":
               //priorityId = getPriorityId(f["value"], f["values"]["items"]);
               priorityId = int.parse(f["value"]);
@@ -335,6 +394,9 @@ class GttUtilities {
               break;
             case "due_date":
               dueDate = f["value"];
+              break;
+            case "done_ratio":
+              doneRatio = f["value"];
               break;
           }
 
@@ -361,9 +423,11 @@ class GttUtilities {
       "is_private": isPrivate,
       "start_date": startDate,
       "due_date": dueDate,
+      "done_ratio": doneRatio,
       "custom_fields": customFields,
       "geojson": geoJson,
       "uploads": uploads,
+      "issue_id": issueId,
     };
 
     Map<String, dynamic> issue = {

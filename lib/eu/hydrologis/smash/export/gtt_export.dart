@@ -5,12 +5,15 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dart_hydrologis_utils/dart_hydrologis_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:smash/eu/hydrologis/smash/gtt/gtt_uilities.dart';
+import 'package:smash/eu/hydrologis/smash/models/project_state.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/images.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/logs.dart';
 import 'package:smash/eu/hydrologis/smash/project/objects/notes.dart';
@@ -409,7 +412,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
   }
 
   Future<List<Map<String, dynamic>>> uploadImageData(
-      List<String> imageIds, var db) async {
+      List<String> imageIds, GeopaparazziProjectDb db) async {
     List<Map<String, dynamic>> retVal = [];
 
     if (imageIds.isNotEmpty) {
@@ -417,6 +420,11 @@ class _GttExportWidgetState extends State<GttExportWidget> {
         debugPrint("ImageID: $imageId");
 
         DbImage dbImage = db.getImageById(int.parse(imageId));
+
+        if (dbImage.isDirty == 0) {
+          continue;
+        }
+
         Uint8List imageBytes = db.getImageDataBytes(dbImage.imageDataId);
 
         String imageName = "img_$imageId.jpg";
@@ -438,6 +446,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
             "content_type": "image/jpg",
           };
 
+          await db.updateImageDirty(int.parse(imageId), false);
           retVal.add(r);
         }
       }
@@ -447,7 +456,8 @@ class _GttExportWidgetState extends State<GttExportWidget> {
   }
 
   Future uploadProjectData(BuildContext context) async {
-    var db = widget.projectDb;
+    GeopaparazziProjectDb db = widget.projectDb;
+    bool noteUpdated = false;
     int uploadCount = 0;
 
     _uploadTiles = [];
@@ -469,12 +479,42 @@ class _GttExportWidgetState extends State<GttExportWidget> {
           "status_message: ${ret["status_message"]}");
 
       if (ret["status_code"] == 201) {
-        uploadCount++;
+        ///
+        /// Inserting GTT Issue ID into the Note Form
+        ///
+        if (note.hasForm()) {
+          Map<String, dynamic> noteForm = jsonDecode(note.form);
+          String sectionDesc = noteForm["sectiondescription"];
 
+          try {
+            Map<String, dynamic> retIss = ret["status_data"];
+            Map<String, dynamic> issue = retIss["issue"];
+            int issueId = issue["id"];
+
+            //noteForm.update("sectionname", (value) => "Issue #$issueId");
+            //noteForm.update("gttIssueNum", (value) => issueId,
+            //    ifAbsent: () => issueId);
+            //note.text = "Issue $issueId";
+
+            noteForm["gtt_issue_id"] = issueId;
+
+            note.form = jsonEncode(noteForm);
+            note.timeStamp = DateTime.now().millisecondsSinceEpoch;
+
+            await db.updateNote(note);
+            noteUpdated = true;
+          } catch (e) {
+            debugPrint("Error: ${e.toString()}");
+          }
+        }
+      }
+      if (ret["status_code"] == 201 || ret["status_code"] == 204) {
+        uploadCount++;
         note.isDirty = 0;
         await db.updateNoteDirty(note.id, false);
       }
     }
+
     _uploadTiles.add(GttUtilities.getResultTile(
         SL.of(context).gttExport_formNotesUpload, //"Form Notes Upload"
         "$uploadCount ${SL.of(context).gttExport_formsUploadedToGttServer}")); //"Forms uploaded to GTT Server"
@@ -496,7 +536,7 @@ class _GttExportWidgetState extends State<GttExportWidget> {
       debugPrint("SimpleNote status_code: ${ret["status_code"]}, "
           "status_message: ${ret["status_message"]}");
 
-      if (ret["status_code"] == 201) {
+      if (ret["status_code"] == 201 || ret["status_code"] == 204) {
         uploadCount++;
 
         note.isDirty = 0;
@@ -554,6 +594,16 @@ class _GttExportWidgetState extends State<GttExportWidget> {
         log.isDirty = 0;
         await db.updateLogDirty(log.id, false);
       }
+    }
+
+    ///
+    /// Updating Project Screen if Note has been updated
+    ///
+    if (noteUpdated) {
+      ProjectState projectState =
+          Provider.of<ProjectState>(context, listen: false);
+
+      projectState.reloadProject(context);
     }
 
     _uploadTiles.add(GttUtilities.getResultTile(
