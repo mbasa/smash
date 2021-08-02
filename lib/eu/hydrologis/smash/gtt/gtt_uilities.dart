@@ -290,8 +290,6 @@ class GttUtilities {
       "issue": params,
     };
 
-    //debugPrint("Issue: ${issue.toString()}");
-
     return issue;
   }
 
@@ -300,7 +298,6 @@ class GttUtilities {
     bool issueExists = false;
 
     for (Map<String, dynamic> f in formItems) {
-      debugPrint("key: ${f["key"]}");
       if (f["key"] == "issue_id") {
         issueExists = true;
       }
@@ -310,7 +307,7 @@ class GttUtilities {
       Map<String, dynamic> map = {
         "key": "issue_id",
         "label": "",
-        "value": issueId,
+        "value": "$issueId",
         "values": null,
         "type": "hidden",
         "mandatory": "yes",
@@ -348,21 +345,7 @@ class GttUtilities {
       String sectionName = form["sectionname"];
       String sectionDesc = form["sectiondescription"];
 
-      if (form.containsKey("gtt_issue_id")) {
-        debugPrint("*** Saved Issue Number: ${form["gtt_issue_id"]} ***");
-        issueId = form["gtt_issue_id"];
-      }
-
-      if (sectionName != null && sectionName.toLowerCase() == "text note") {
-        for (var f in form["forms"][0]["formitems"]) {
-          if (f["key"] == "title") {
-            subject = f["value"];
-          }
-          if (f["key"] == "description") {
-            description = f["value"];
-          }
-        }
-      } else if (sectionDesc != null && sectionDesc.contains("GTT")) {
+      if (sectionDesc != null && sectionDesc.contains("GTT")) {
         for (var f in form["forms"][0]["formitems"]) {
           String fKey = f["key"];
 
@@ -410,7 +393,24 @@ class GttUtilities {
           }
         }
       } else {
-        description = "UNSUPPORTED FORM: \n\n${note.form}";
+        for (var f in form["forms"][0]["formitems"]) {
+          if (f["key"] == "title") {
+            subject = f["value"];
+          }
+          if (f["key"] == "description") {
+            description = f["value"];
+          }
+          if (f["key"] == "issue_id") {
+            issueId = int.parse(f["value"]);
+          }
+        }
+
+        if (sectionName != null &&
+            sectionName.toLowerCase() != "text note" &&
+            sectionName.toLowerCase() != "image note") {
+          description = "UNSUPPORTED FORM: \n\n${note.form}";
+          debugPrint("Form Section Name: ${sectionName.toLowerCase()}");
+        }
       }
     }
 

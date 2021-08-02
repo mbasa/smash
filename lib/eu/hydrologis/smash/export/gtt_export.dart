@@ -468,6 +468,8 @@ class _GttExportWidgetState extends State<GttExportWidget> {
     List<Note> formNotes = db.getNotes(doSimple: false, onlyDirty: true);
 
     for (Note note in formNotes) {
+      Map<String, dynamic> noteForm = jsonDecode(note.form);
+
       List<String> imageIds = FormUtilities.getImageIds(note.form);
 
       List<Map<String, dynamic>> uploads = await uploadImageData(imageIds, db);
@@ -482,30 +484,27 @@ class _GttExportWidgetState extends State<GttExportWidget> {
         ///
         /// Inserting GTT Issue ID into the Note Form
         ///
-        if (note.hasForm()) {
-          Map<String, dynamic> noteForm = jsonDecode(note.form);
-          String sectionDesc = noteForm["sectiondescription"];
 
-          try {
-            Map<String, dynamic> retIss = ret["status_data"];
-            Map<String, dynamic> issue = retIss["issue"];
-            int issueId = issue["id"];
+        try {
+          Map<String, dynamic> retIss = ret["status_data"];
+          Map<String, dynamic> issue = retIss["issue"];
+          int issueId = issue["id"];
 
-            //noteForm.update("sectionname", (value) => "Issue #$issueId");
-            //noteForm.update("gttIssueNum", (value) => issueId,
-            //    ifAbsent: () => issueId);
-            //note.text = "Issue $issueId";
+          List<Map<String, dynamic>> fi = List<Map<String, dynamic>>.from(
+              noteForm["forms"][0]["formitems"]);
 
-            noteForm["gtt_issue_id"] = issueId;
+          List<Map<String, dynamic>> formItems =
+              GttUtilities.addIssueToFormItems(fi, issueId);
 
-            note.form = jsonEncode(noteForm);
-            note.timeStamp = DateTime.now().millisecondsSinceEpoch;
+          noteForm["forms"][0]["formitems"] = formItems;
 
-            await db.updateNote(note);
-            noteUpdated = true;
-          } catch (e) {
-            debugPrint("Error: ${e.toString()}");
-          }
+          note.form = jsonEncode(noteForm);
+          note.timeStamp = DateTime.now().millisecondsSinceEpoch;
+
+          await db.updateNote(note);
+          noteUpdated = true;
+        } catch (e) {
+          debugPrint("Error: ${e.toString()}");
         }
       }
       if (ret["status_code"] == 201 || ret["status_code"] == 204) {
@@ -518,6 +517,16 @@ class _GttExportWidgetState extends State<GttExportWidget> {
     _uploadTiles.add(GttUtilities.getResultTile(
         SL.of(context).gttExport_formNotesUpload, //"Form Notes Upload"
         "$uploadCount ${SL.of(context).gttExport_formsUploadedToGttServer}")); //"Forms uploaded to GTT Server"
+
+    /**
+     * Updating Project Screen if Note has been updated
+     */
+    if (noteUpdated) {
+      ProjectState projectState =
+          Provider.of<ProjectState>(context, listen: false);
+
+      projectState.reloadProject(context);
+    }
 
     /**
      * Simple Notes Upload
@@ -594,16 +603,6 @@ class _GttExportWidgetState extends State<GttExportWidget> {
         log.isDirty = 0;
         await db.updateLogDirty(log.id, false);
       }
-    }
-
-    ///
-    /// Updating Project Screen if Note has been updated
-    ///
-    if (noteUpdated) {
-      ProjectState projectState =
-          Provider.of<ProjectState>(context, listen: false);
-
-      projectState.reloadProject(context);
     }
 
     _uploadTiles.add(GttUtilities.getResultTile(
