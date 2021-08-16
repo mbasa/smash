@@ -27,7 +27,7 @@ jobs:
         run: flutter pub get
 
       - name: Build apk
-        run: flutter build apk --release
+        run: flutter build apk --debug
 
       # Upload generated appbundle to the artifacts.
       - uses: ncipollo/release-action@v1
