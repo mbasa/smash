@@ -284,6 +284,7 @@ class GttUtilities {
       "custom_fields": customFields,
       "geojson": geoJson,
       "uploads": uploads,
+      "issue_id": -99,
     };
 
     Map<String, dynamic> issue = {
